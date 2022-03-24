@@ -49,3 +49,7 @@ variable version_1 {
 variable version_2 {
     default = "1.21.9"
 }
+
+variable vm_size {
+    default = "Standard_D2_v5"
+}

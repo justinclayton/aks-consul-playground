@@ -5,6 +5,10 @@ connectInject:
 controller:
   enabled: true
 server:
-  affinity: null
-  # nodeSelector: |
-  #   aksversion: 1.20.15
+  updatePartition: 3
+  nodeSelector: |
+    aksVersion: v1.20.15
+ui:
+  enabled: true
+  service:
+    type: LoadBalancer

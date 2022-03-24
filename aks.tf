@@ -33,7 +33,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     location            = azurerm_resource_group.k8s.location
     resource_group_name = azurerm_resource_group.k8s.name
     dns_prefix          = var.dns_prefix
-    kubernetes_version  = var.version_1
+    kubernetes_version  = var.version_2
 
     linux_profile {
         admin_username = "ubuntu"
@@ -44,10 +44,17 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     }
 
     default_node_pool {
-        name            = "agentpool"
-        node_count      = 2
-        vm_size         = "Standard_D2_v5"
+        name            = "firstpool"
+        node_count      = 3
+        vm_size         = var.vm_size
         orchestrator_version = var.version_1
+        node_labels = {
+            aksVersion = var.version_1
+        }
+
+        tags = {
+            Environment = "firstpool"
+        }
     }
 
     identity {
@@ -77,26 +84,16 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "secondpool" {
-  name                  = "secondpool"
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.k8s.id
-#   vm_size               = "Standard_DS2_v5"
-  vm_size               = "Standard_D2_v5"
-  node_count            = 2
-  orchestrator_version  = var.version_2
+    name                  = "secondpool"
+    kubernetes_cluster_id = azurerm_kubernetes_cluster.k8s.id
+    vm_size               = "standard_d2as_v5" # slightly different vm size than the default pool just fyi, had to for my own dumb reasons
+    node_count            = 3
+    orchestrator_version  = var.version_2
+    node_labels = {
+        aksVersion = var.version_2
+    }
 
-  tags = {
-    Environment = "secondpool"
-  }
+    tags = {
+        Environment = "secondpool"
+    }
 }
-
-# resource "azurerm_kubernetes_cluster_node_pool" "thirdpool" {
-#   name                  = "thirdpool"
-#   kubernetes_cluster_id = azurerm_kubernetes_cluster.k8s.id
-#   vm_size               = "Standard_D2_v5"
-#   node_count            = 1
-#   orchestrator_version  = var.version_1
-
-#   tags = {
-#     Environment = "thirdpool"
-#   }
-# }
