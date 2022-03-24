@@ -1,0 +1,10 @@
+global:
+  name: consul
+connectInject:
+  enabled: true
+controller:
+  enabled: true
+server:
+  affinity: null
+  # nodeSelector: |
+  #   aksversion: 1.20.15
